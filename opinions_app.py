@@ -1,6 +1,6 @@
 from datetime import datetime
 from random import randrange
-from flask import Flask
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -24,7 +24,16 @@ def index_view():
         return 'none opinion'
     offset_value = randrange(quantity)
     opinion = Opinion.query.offset(offset_value).first()
-    return opinion.text
+    return render_template('opinion.html', opinion=opinion)
+
+@app.route('/add')
+def add_opinion_view():
+    return render_template('add_opinion.html')
+
+@app.route('/opinions/<int:id>')
+def opinion_view(id):
+    opinion = Opinion.query.get(id)
+    return render_template('opinion.html', opinion=opinion)
 
 if __name__ == '__main__':
     app.run()
