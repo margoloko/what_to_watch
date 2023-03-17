@@ -1,6 +1,6 @@
 from datetime import datetime
 from random import randrange
-from flask import Flask, render_template
+from flask import Flask, redirect, render_template, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, URLField
@@ -46,9 +46,17 @@ def index_view():
     opinion = Opinion.query.offset(offset_value).first()
     return render_template('opinion.html', opinion=opinion)
 
-@app.route('/add')
+@app.route('/add', methods=['GET', 'POST'])
 def add_opinion_view():
-    return render_template('add_opinion.html')
+    form = OpinionForm()
+    if form.validate_on_submit():
+        opinion = Opinion(title=form.title.data,
+                          text=form.text.data,
+                          source=form.source.data)
+        db.session.add(opinion)
+        db.session.commit()
+        return redirect(url_for('opinion_view', id=opinion.id))
+    return render_template('add_opinion.html', form=form)
 
 @app.route('/opinions/<int:id>')
 def opinion_view(id):
