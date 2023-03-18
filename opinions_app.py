@@ -93,7 +93,7 @@ def load_opinions_command():
         counter = 0
         for row in reader:
             opinion = Opinion(**row)
-            db.session.add()
+            db.session.add(opinion)
             db.session.commit()
             counter += 1
         click.echo(f'Загружено мнений: {counter}')
