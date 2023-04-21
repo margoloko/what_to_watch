@@ -12,6 +12,12 @@ class Opinion(db.Model):
     added_by = db.Column(db.String(64))
 
     def to_dict(self):
+        """
+        Возвращает словарь с данными мнения.
+
+        :return: словарь с данными мнения
+        :rtype: dict
+        """
         return dict(id = self.id,
         title = self.title,
         text = self.text,
@@ -20,6 +26,12 @@ class Opinion(db.Model):
         added_by = self.added_by)
 
     def from_dict(self, data):
+        """
+        Заполняет поля объекта данными из словаря.
+
+        :param data: словарь с данными мнения
+        :type data: dict
+        """
         for field in ['title', 'text', 'source', 'added_by']:
             if field in data:
                 setattr(self, field, data[field])
